@@ -4,20 +4,14 @@ tasks:
   setup:
     desc: "Cria venv, instala dependências e prepara o arquivo .env"
     cmds:
-      - test -d venv || python3 -m venv venv
       - ./venv/bin/pip install --upgrade pip
       - ./venv/bin/pip install -r requirements.txt
-      - test -f .env || cp .env.example .env
       - 'echo ""'
       - 'echo "Setup concluído."'
       - 'echo "Ative o venv -> source venv/bin/activate"'
       - 'echo "Edite o .env e preencha as chaves (LANGSMITH_API_KEY, USERNAME_LANGSMITH_HUB, LLM_PROVIDER, etc.)"'
-    status:
-      - test -d venv
-      - test -f .env
 
   pull:
     desc: "Faz pull do prompt v1 (ruim) do LangSmith Hub para prompts/bug_to_user_story_v1.yml"
-    deps: [setup]
     cmds:
       - ./venv/bin/python src/pull_prompts.py

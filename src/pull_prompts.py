@@ -15,7 +15,7 @@ from utils import save_yaml, check_env_vars, print_section_header
 load_dotenv()
 
 PROMPT_NAME = "leonanluppi/bug_to_user_story_v1"
-OUTPUT_PATH = "2026-05-16/bug_to_user_story_v1.yml"
+OUTPUT_PATH = "pulls/bug_to_user_story_v1.yml"
 
 
 def pull_prompts_from_langsmith():
