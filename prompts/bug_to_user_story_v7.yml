@@ -1,5 +1,5 @@
 bug_to_user_story_v7:
-  description: "Converte relatos de bugs em User Stories aplicando ReAct (Reasoning + Acting): o modelo opera em ciclos explícitos de Thought → Action → Observation sobre o próprio relato do bug, em que cada Action é uma operação de inspeção/extração sobre o texto (extrair_persona, extrair_comportamento, inferir_beneficio, mapear_criterios) e cada Observation registra o resultado factual citando o trecho que o fundamenta (ancoragem em evidência). A fase de Thought é sustentada por Chain-of-Thought. Zero-shot, sem Few-shot."
+  description: "Converte relatos de bugs em User Stories aplicando ReAct (Reasoning + Acting): o modelo opera em ciclos explícitos de Thought → Action → Observation sobre o próprio relato do bug, em que cada Action é uma operação de inspeção/extração sobre o texto (extrair_persona, extrair_comportamento, inferir_beneficio, mapear_criterios) e cada Observation registra o resultado factual citando o trecho que o fundamenta (ancoragem em evidência). Zero-shot, sem Few-shot."
 
   system_prompt: |
     Você é um Product Manager sênior especialista em metodologias ágeis e em traduzir relatos de bugs em User Stories acionáveis para times de engenharia.
@@ -67,11 +67,9 @@ bug_to_user_story_v7:
   created_at: "2026-05-27"
   techniques_applied:
     - "ReAct"
-    - "Chain-of-Thought"
   tags:
     - "bug-analysis"
     - "user-story"
     - "product-management"
     - "react"
-    - "chain-of-thought"
     - "zero-shot"

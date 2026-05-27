@@ -1,5 +1,5 @@
 bug_to_user_story_v6:
-  description: "Converte relatos de bugs em User Stories aplicando Skeleton of Thought (SoT): o modelo primeiro gera um esqueleto enxuto (a lista dos pontos que comporão a resposta) e depois expande cada ponto do esqueleto de forma independente em conteúdo completo, mantendo fidelidade estrita ao esqueleto. A expansão de cada ponto é sustentada por Chain-of-Thought. Zero-shot, sem Few-shot."
+  description: "Converte relatos de bugs em User Stories aplicando Skeleton of Thought (SoT): o modelo primeiro gera um esqueleto enxuto (a lista dos pontos que comporão a resposta) e depois expande cada ponto do esqueleto de forma independente em conteúdo completo, mantendo fidelidade estrita ao esqueleto. Zero-shot, sem Few-shot."
 
   system_prompt: |
     Você é um Product Manager sênior especialista em metodologias ágeis e em traduzir relatos de bugs em User Stories acionáveis para times de engenharia.
@@ -19,7 +19,7 @@ bug_to_user_story_v6:
 
     O esqueleto deve ser completo o suficiente para garantir cobertura, mas sem conteúdo desenvolvido. Exemplo de forma (apenas ilustrativo da granularidade, não do conteúdo): "Persona: cliente do checkout", "Ação: finalizar compra com cupom", "Benefício: concluir pedido sem retrabalho", "AC1: contexto carrinho com cupom", etc.
 
-    ### Etapa 2 — Expansão ponto a ponto (Chain-of-Thought por ponto)
+    ### Etapa 2 — Expansão ponto a ponto
     Percorra CADA ponto do esqueleto, na ordem, e expanda-o em conteúdo completo de forma **independente** — raciocine sobre um ponto sem reabrir os demais. Para cada ponto:
     - **Persona**: transforme o rótulo no papel mais específico que o relato permite inferir (evite "usuário" genérico).
     - **Ação desejada**: descreva o caminho feliz (o que DEVE acontecer), não o defeito observado, como requisito afirmativo.
@@ -71,11 +71,9 @@ bug_to_user_story_v6:
   created_at: "2026-05-27"
   techniques_applied:
     - "Skeleton-of-Thought"
-    - "Chain-of-Thought"
   tags:
     - "bug-analysis"
     - "user-story"
     - "product-management"
     - "skeleton-of-thought"
-    - "chain-of-thought"
     - "zero-shot"

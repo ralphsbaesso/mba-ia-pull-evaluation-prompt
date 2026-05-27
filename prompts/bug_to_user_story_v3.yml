@@ -1,5 +1,5 @@
 bug_to_user_story_v3:
-  description: "Converte relatos de bugs em User Stories aplicando Chain-of-Thought como técnica central, combinada com Role Prompting leve (zero-shot, sem Few-shot) para isolar o impacto do CoT."
+  description: "Converte relatos de bugs em User Stories aplicando Chain-of-Thought como técnica central (zero-shot, sem Few-shot) para isolar o impacto do CoT."
 
   system_prompt: |
     Você é um Product Manager sênior especialista em metodologias ágeis e em traduzir relatos de bugs em User Stories acionáveis para times de engenharia.
@@ -49,11 +49,9 @@ bug_to_user_story_v3:
   created_at: "2026-05-20"
   techniques_applied:
     - "Chain-of-Thought"
-    - "Role Prompting"
   tags:
     - "bug-analysis"
     - "user-story"
     - "product-management"
     - "chain-of-thought"
-    - "role-prompting"
     - "zero-shot"

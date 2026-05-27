@@ -82,11 +82,9 @@ bug_to_user_story_v5:
   created_at: "2026-05-20"
   techniques_applied:
     - "Tree-of-Thoughts"
-    - "Role Prompting"
   tags:
     - "bug-analysis"
     - "user-story"
     - "product-management"
     - "tree-of-thoughts"
-    - "role-prompting"
     - "zero-shot"
