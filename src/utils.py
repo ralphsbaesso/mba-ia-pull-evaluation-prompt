@@ -222,10 +222,27 @@ def get_llm(model: Optional[str] = None, temperature: float = 0.0):
             google_api_key=api_key
         )
 
+    elif provider == 'deepseek':
+        from langchain_openai import ChatOpenAI
+
+        api_key = os.getenv('DEEPSEEK_API_KEY')
+        if not api_key:
+            raise ValueError(
+                "DEEPSEEK_API_KEY não configurada no .env\n"
+                "Obtenha uma chave em: https://platform.deepseek.com/api_keys"
+            )
+
+        return ChatOpenAI(
+            model=model_name,
+            temperature=temperature,
+            api_key=api_key,
+            base_url="https://api.deepseek.com",
+        )
+
     else:
         raise ValueError(
             f"Provider '{provider}' não suportado.\n"
-            f"Use 'openai' ou 'google' na variável LLM_PROVIDER do .env"
+            f"Use 'openai', 'google' ou 'deepseek' na variável LLM_PROVIDER do .env"
         )
 
 

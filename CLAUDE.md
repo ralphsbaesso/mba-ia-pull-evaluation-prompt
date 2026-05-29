@@ -37,7 +37,7 @@ task --list    # lists every available task
 
 **Single source of truth = LangSmith Hub.** Local YAML is the editing surface; the Hub is what gets evaluated. This is why the loop requires push between edits.
 
-**Provider abstraction** lives in `src/utils.py::get_llm` / `get_eval_llm`. The `LLM_PROVIDER` env var switches between OpenAI (`gpt-4o-mini` / `gpt-4o`) and Google (`gemini-2.5-flash` for both). All scripts call `get_llm()` — never instantiate `ChatOpenAI` / `ChatGoogleGenerativeAI` directly.
+**Provider abstraction** lives in `src/utils.py::get_llm` / `get_eval_llm`. The `LLM_PROVIDER` env var switches between OpenAI (`gpt-4o-mini` / `gpt-4o`), Google (`gemini-2.5-flash`), and DeepSeek (`deepseek-v4-flash`, OpenAI-compatible via `base_url=https://api.deepseek.com`). All scripts call `get_llm()` — never instantiate `ChatOpenAI` / `ChatGoogleGenerativeAI` directly.
 
 **Metrics pipeline** (`src/metrics.py` + `src/evaluate.py`):
 - 3 base metrics (`f1_score`, `clarity`, `precision`) are computed per-example via LLM-as-judge.
