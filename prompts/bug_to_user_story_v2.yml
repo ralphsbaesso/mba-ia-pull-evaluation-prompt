@@ -10,8 +10,8 @@ bug_to_user_story_v2:
     ## Raciocínio interno (Chain-of-Thought — NÃO exibir na saída)
     Antes de escrever, raciocine internamente, em silêncio, e **NÃO inclua este raciocínio na resposta**:
     1. **Classifique a complexidade do relato**:
-       - **Simples**: um único problema pontual, sem detalhes técnicos profundos (ex.: um botão quebrado, uma validação ausente, um problema visual).
-       - **Médio**: um problema com detalhes técnicos relevantes no relato (endpoint, código HTTP, severidade, causa provável, cenário de cálculo, passos de reprodução).
+       - **Simples**: um único problema pontual, sem detalhes técnicos profundos (ex.: um botão quebrado, uma validação ausente, um problema visual). **Atenção:** um relato que apenas cita um número ou contagem errada (ex.: "mostra 50 mas só há 42") **continua SIMPLES** se não traz detalhe técnico de causa/solução — não o promova a MÉDIO só por conter números.
+       - **Médio**: um problema com detalhes técnicos relevantes no relato (endpoint, código HTTP, severidade, causa provável descrita, cenário de cálculo com valores, passos de reprodução, observações de arquitetura).
        - **Complexo**: múltiplas falhas e/ou seções enumeradas no relato (vários problemas, impacto de negócio, métricas, severidade crítica).
     2. **Selecione a estrutura de saída** correspondente ao nível identificado (ver abaixo).
     3. Escreva apenas a User Story final, sem mencionar a classificação nem o raciocínio.
@@ -19,7 +19,7 @@ bug_to_user_story_v2:
     ## Formato de saída por complexidade
 
     ### Nível SIMPLES
-    Responda EXATAMENTE neste formato:
+    Responda EXATAMENTE neste formato, **sem nenhuma seção técnica adicional** (não crie `Contexto Técnico`, `Critérios Técnicos`, `Exemplo de Cálculo` nem blocos de severidade/impacto — mesmo que o relato cite números ou contagens pontuais):
 
     Como um(a) <persona>, eu quero <ação/funcionalidade>, para <benefício/valor>.
 
@@ -31,10 +31,18 @@ bug_to_user_story_v2:
     - E <validação adicional>
 
     ### Nível MÉDIO
-    A mesma story do nível simples, com ≥5 critérios de aceitação Gherkin, **mais** uma seção final:
+    A mesma story do nível simples, com **≥5 critérios de aceitação Gherkin**, **mais as seções condicionais abaixo** — inclua apenas as que o relato justificar, na ordem em que fizerem sentido:
 
-    Contexto Técnico:
-    - <detalhes técnicos relevantes presentes no relato: endpoint, status HTTP, severidade, causa provável, comportamento atual vs. esperado>
+    - **Grupos adicionais de critérios Gherkin** (opcional): quando o relato sugerir um eixo extra além do fluxo principal, crie um grupo nomeado de critérios Gherkin para ele. Use o nome que melhor descrever o tema, por exemplo:
+      - `Critérios Adicionais para Admins:` (quando há papéis/permissões distintos)
+      - `Critérios de Prevenção:` (quando cabe evitar a recorrência do problema)
+      - `Critérios de Acessibilidade:` (quando o bug é de UI e há implicações de a11y)
+
+    - **`Critérios Técnicos:`** (quando o relato permite recomendar solução): liste **recomendações de solução** acionáveis derivadas do relato (ex.: paginação, índice em coluna, retry com backoff, sanitização de input, carregamento em background). É diferente de apenas descrever o problema — aqui você propõe *como resolver*.
+
+    - **`Exemplo de Cálculo:`** (quando o relato traz números/valores de um cálculo): reproduza os valores do relato passo a passo (subtotal, desconto, total etc.), reafirmando os números informados.
+
+    - **`Contexto Técnico:`** (ou `Contexto de Segurança:` / `Contexto do Bug:`): detalhes técnicos relevantes presentes no relato — endpoint, status HTTP, severidade, tipo (ex.: OWASP), causa provável, comportamento atual vs. esperado, impacto.
 
     ### Nível COMPLEXO
     Use a estrutura completa abaixo, agrupando os critérios por área (A./B./C./D.):
@@ -83,7 +91,7 @@ bug_to_user_story_v2:
     - Foque no **valor para o usuário**, não apenas no detalhe técnico do bug.
     - Use linguagem **clara, objetiva e específica** — evite termos vagos.
     - Inclua **pelo menos 5 critérios de aceitação** no formato Gherkin.
-    - **Guarda-corpo de precisão (importante):** inclua somente conteúdo técnico, de severidade, de impacto ou de tasks que esteja **presente no relato ou seja diretamente inferível dele**. **Não invente** endpoints, números, severidades, métricas ou tarefas que não tenham base no relato.
+    - **Guarda-corpo de precisão (importante):** inclua somente conteúdo técnico, de severidade, de impacto ou de tasks que esteja **presente no relato ou seja diretamente inferível dele**. **Não invente** endpoints, números, severidades, métricas ou tarefas que não tenham base no relato. **Reafirmar dados que JÁ estão no relato é desejável, não é invenção** — repita os números, valores monetários, endpoints, status HTTP e severidades informados (ex.: reproduzir os valores de um cálculo em `Exemplo de Cálculo`).
     - Não exiba seus passos de classificação/raciocínio; entregue apenas a User Story formatada.
 
     ## Exemplos (Few-shot Learning)
@@ -130,7 +138,21 @@ bug_to_user_story_v2:
     - E todos os elementos devem permanecer visíveis e alinhados
     - E não deve haver sobreposição de componentes
 
-    ### Exemplo 4 (MÉDIO)
+    ### Exemplo 4 (SIMPLES — relato com número, sem detalhe técnico)
+    Relato de Bug:
+    Painel de métricas exibe total de pedidos errado. Mostra 80 mas só há 73 na listagem.
+
+    User Story:
+    Como um gerente acompanhando o painel de métricas, eu quero ver o total de pedidos correto, para que eu possa tomar decisões baseadas em dados precisos.
+
+    Critérios de Aceitação:
+    - Dado que acesso o painel de métricas
+    - Quando visualizo o total de pedidos
+    - Então o número exibido deve corresponder ao total real da listagem
+    - E o valor deve refletir os dados atuais
+    - E não deve contabilizar registros duplicados ou removidos
+
+    ### Exemplo 5 (MÉDIO)
     Relato de Bug:
     Notificações por email de redefinição de senha não chegam ao usuário.
 
@@ -159,7 +181,71 @@ bug_to_user_story_v2:
     - Severidade: ALTA — usuários sem acesso à conta
     - Comportamento atual: UI confirma envio mesmo quando o email falha
 
-    ### Exemplo 5 (COMPLEXO)
+    ### Exemplo 6 (MÉDIO — com Critérios Técnicos de solução)
+    Relato de Bug:
+    App Android congela ao abrir a lista de mensagens com mais de 60 itens.
+
+    Observações:
+    - Tela fica travada por vários segundos
+    - Em alguns aparelhos ocorre ANR (Application Not Responding)
+    - A lista carrega todos os itens de uma vez na thread principal
+    - Não há paginação
+
+    User Story:
+    Como um usuário do app Android, eu quero abrir minha lista de mensagens rapidamente sem travamentos, para que eu possa acessar o conteúdo sem frustração.
+
+    Critérios de Aceitação:
+    - Dado que tenho mais de 60 mensagens
+    - Quando abro a tela de mensagens
+    - Então a tela deve carregar em menos de 2 segundos
+    - E a interface não deve congelar
+    - E não deve ocorrer ANR
+
+    Critérios Técnicos:
+    - Implementar paginação (carregar lotes de itens por vez)
+    - Carregar os dados em uma background thread, fora da thread principal
+    - Usar lista reciclável (RecyclerView com ViewHolder)
+    - Adicionar scroll infinito para carregar mais itens sob demanda
+
+    Contexto do Bug:
+    - Problema: lista sem paginação carregando na thread principal
+    - Sintoma: congelamento e ANR após 60+ itens
+
+    ### Exemplo 7 (MÉDIO — com Exemplo de Cálculo)
+    Relato de Bug:
+    Carrinho calcula o total errado ao aplicar desconto.
+
+    Cenário:
+    - Item X: R$ 800
+    - Item Y: R$ 200
+    - Desconto: 10%
+    - Valor esperado: R$ 900
+    - Valor mostrado: R$ 920
+
+    O desconto está sendo aplicado em apenas um dos itens.
+
+    User Story:
+    Como um cliente finalizando a compra, eu quero que o total seja calculado corretamente ao aplicar um desconto, para que eu pague o valor justo pelos itens.
+
+    Critérios de Aceitação:
+    - Dado que tenho múltiplos itens no carrinho
+    - Quando aplico um desconto percentual
+    - Então o desconto deve incidir sobre o valor total de todos os itens
+    - E o valor final deve ser: (soma dos itens) × (1 - desconto%)
+    - E o detalhamento deve exibir subtotal, desconto e total
+
+    Exemplo de Cálculo:
+    - Item X: R$ 800
+    - Item Y: R$ 200
+    - Subtotal: R$ 1.000
+    - Desconto 10%: -R$ 100
+    - Total: R$ 900
+
+    Contexto Técnico:
+    - Bug atual: desconto aplicado em apenas um item
+    - Resultado incorreto: R$ 920 (deveria ser R$ 900)
+
+    ### Exemplo 8 (COMPLEXO)
     Relato de Bug:
     Módulo de agendamento online com múltiplas falhas críticas.
 
@@ -250,7 +336,7 @@ bug_to_user_story_v2:
     User Story:
 
   version: "v2"
-  created_at: "2026-05-29"
+  created_at: "2026-05-30"
   techniques_applied:
     - "Few-shot Learning"
     - "Chain-of-Thought"
