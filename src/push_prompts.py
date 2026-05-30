@@ -1,13 +1,13 @@
 """
-Script para fazer push (PÚBLICO) de prompts otimizados para o LangSmith Prompt Hub.
+Script para fazer push (PÚBLICO) do prompt otimizado v2 para o LangSmith Prompt Hub.
 
 Este script:
-1. Lê a versão do prompt por parâmetro de linha de comando (v2 a v7).
-2. Valida o parâmetro e a estrutura do YAML correspondente.
+1. Lê os prompts otimizados de prompts/bug_to_user_story_v2.yml
+2. Valida a estrutura do YAML.
 3. Faz push PÚBLICO para o LangSmith Hub com tags e descrição vindas do YAML.
 
 Uso:
-    ./venv/bin/python src/push_prompts.py <versao>   # ex.: v2 ... v7
+    ./venv/bin/python src/push_prompts.py
 """
 
 import os
@@ -22,8 +22,6 @@ from utils import (
 )
 
 load_dotenv()
-
-ALLOWED_VERSIONS = ["v2", "v3", "v4", "v5", "v6", "v7"]
 
 
 def push_prompt_to_langsmith(prompt_name: str, prompt_data: dict) -> bool:
@@ -67,8 +65,7 @@ def validate_prompt(prompt_data: dict) -> tuple[bool, list]:
     """
     Valida estrutura básica de um prompt (campos obrigatórios + ≥ 1 técnica).
 
-    Cada versão (v2–v7) aplica deliberadamente uma única técnica isolada, então
-    aqui exigimos pelo menos 1 técnica (e não 2 como em validate_prompt_structure).
+    Aqui exigimos pelo menos 1 técnica em techniques_applied.
 
     Args:
         prompt_data: Dados do prompt
@@ -100,37 +97,25 @@ def main():
     """Função principal"""
     print_section_header("PUSH PROMPT — LangSmith Hub")
 
-    # 1. Ler e validar argumento da versão
-    if len(sys.argv) != 2:
-        print("Uso: python src/push_prompts.py <versao>")
-        print(f"Versões aceitas: {', '.join(ALLOWED_VERSIONS)}")
-        return 1
-
-    version = sys.argv[1]
-    if version not in ALLOWED_VERSIONS:
-        print(f"❌ Versão inválida: '{version}'")
-        print(f"   Aceitas apenas: {', '.join(ALLOWED_VERSIONS)}")
-        return 1
-
-    # 2. Checar variáveis de ambiente
+    # 1. Checar variáveis de ambiente
     if not check_env_vars(["LANGSMITH_API_KEY", "USERNAME_LANGSMITH_HUB"]):
         return 1
 
     username = os.getenv("USERNAME_LANGSMITH_HUB")
 
-    # 3. Carregar YAML correspondente
-    yaml_path = f"prompts/bug_to_user_story_{version}.yml"
+    # 2. Carregar YAML do v2
+    yaml_path = "prompts/bug_to_user_story_v2.yml"
     data = load_yaml(yaml_path)
     if data is None:
         return 1
 
-    prompt_key = f"bug_to_user_story_{version}"
+    prompt_key = "bug_to_user_story_v2"
     prompt_data = data.get(prompt_key)
     if prompt_data is None:
         print(f"❌ Chave '{prompt_key}' não encontrada em {yaml_path}")
         return 1
 
-    # 4. Validar estrutura (antes de qualquer chamada ao Hub)
+    # 3. Validar estrutura (antes de qualquer chamada ao Hub)
     is_valid, errors = validate_prompt(prompt_data)
     if not is_valid:
         print("❌ Estrutura do prompt inválida:")
@@ -140,7 +125,7 @@ def main():
 
     print(f"✅ Estrutura do prompt '{prompt_key}' validada.")
 
-    # 5. Push PÚBLICO
+    # 4. Push PÚBLICO
     prompt_name = f"{username}/{prompt_key}"
     if not push_prompt_to_langsmith(prompt_name, prompt_data):
         return 1
