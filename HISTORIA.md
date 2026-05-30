@@ -51,12 +51,14 @@ a aprovação:
 |---|---|---|---|---|
 | 28/05 | [`resultados/2026-05-28_1.md`](resultados/2026-05-28_1.md) | `3d78eb5` | 0.76 | ❌ Reprovado (correctness, f1) |
 | 29/05 | [`resultados/2026-05-29_1.md`](resultados/2026-05-29_1.md) | `62b2555` | 0.86 | ❌ Reprovado (f1) |
-| 30/05 | [`resultados/2026-05-30_1.md`](resultados/2026-05-30_1.md) | plano `011` | 0.90 | ✅ Aprovado |
+| 30/05 | [`resultados/2026-05-30_1.md`](resultados/2026-05-30_1.md) | `1fecfa3bb5` | 0.78 | ❌ Reprovado (correctness, f1) |
 | 30/05 | [`resultados/2026-05-30_2.md`](resultados/2026-05-30_2.md) | `cba9c96` | 0.90 | ✅ **Aprovado (0.9456)** |
 
-A trajetória do F1-Score (0.76 → 0.86 → 0.90) conta a história das iterações: a
-única métrica que travava a aprovação foi sendo atacada a cada rodada até cruzar
-o limite de 0.90 com folga nas demais.
+A trajetória do F1-Score (0.76 → 0.86 → 0.78 → 0.90) conta a história das
+iterações: a métrica que travava a aprovação foi sendo atacada a cada rodada
+— inclusive com recaídas causadas por falhas transitórias do LLM-as-judge (JSON
+malformado zerando notas isoladas) — até cruzar o limite de 0.90 com folga nas
+demais.
 
 ---
 
@@ -168,9 +170,10 @@ pipeline:
 O dia de fechamento, dedicado a estabilizar o v2 vencedor e limpar a base:
 
 - **Resultados** (`0609f05`, `1fecfa3`): documentadas as rodadas de avaliação das
-  iterações de 29/05 e 30/05, incluindo a **primeira aprovação** registrada em
-  [`resultados/2026-05-30_1.md`](resultados/2026-05-30_1.md) (plano `011`, F1
-  0.86 → 0.90, todas as 5 métricas ≥ 0.9).
+  iterações de 29/05 e 30/05, incluindo a rodada
+  [`resultados/2026-05-30_1.md`](resultados/2026-05-30_1.md) (commit
+  `1fecfa3bb5`), ainda **REPROVADA** (F1 = 0.78, correctness = 0.88) por conta de
+  uma falha transitória do LLM-as-judge que zerou a nota de um exemplo simples.
 - **Refino do v2** (`cba9c96`): reescrito o template do tier MÉDIO com seções
   condicionais (Critérios Técnicos, Exemplo de Cálculo e grupos de critérios
   nomeados), adicionada regra anti-inflação para o tier SIMPLES, classificador
