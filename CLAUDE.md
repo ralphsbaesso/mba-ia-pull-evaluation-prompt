@@ -2,6 +2,15 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## ⛔ GUARD RAIL — NUNCA execute scripts de `src/`
+
+**Regra absoluta, sem exceções:** NÃO execute nenhum script localizado no diretório `src/`. Isso inclui — mas não se limita a — `src/pull_prompts.py`, `src/push_prompts.py`, `src/evaluate.py`, `src/metrics.py`, `src/utils.py` e qualquer outro arquivo `.py` em `src/`.
+
+- Proibido rodar `python src/...`, `./venv/bin/python src/...`, `python -m src....`, ou qualquer invocação equivalente.
+- Proibido executar `task` targets que disparem esses scripts (ex.: `task pull`, `task push`, `task eval`).
+- Você pode **ler e editar** os arquivos de `src/` (respeitando os "off-limits" abaixo), mas **nunca executá-los**.
+- Se a execução parecer necessária, **pare e peça ao usuário** para rodar manualmente (ex.: `! ./venv/bin/python src/evaluate.py`). Apenas o usuário executa esses scripts.
+
 ## Project purpose
 
 A course challenge ("MBA IA — Pull, Otimização e Avaliação de Prompts"). The goal is to pull a deliberately bad prompt (`leonanluppi/bug_to_user_story_v1`) from LangSmith Prompt Hub, refactor it into a v2 that converts bug reports to user stories, push the optimized version back to LangSmith, and run an evaluation that must score >= 0.9 on **all five** metrics (Helpfulness, Correctness, F1-Score, Clarity, Precision) — not just the average.
@@ -20,7 +29,7 @@ task --list    # lists every available task
 ```
 
 ```bash
-# No task yet — run via the venv's Python
+# No task yet — APENAS O USUÁRIO executa (ver GUARD RAIL acima — Claude não roda scripts de src/)
 ./venv/bin/python src/push_prompts.py   # pushes prompts/bug_to_user_story_v2.yml → LangSmith Hub (PUBLIC)
 ./venv/bin/python src/evaluate.py       # pulls v2 from Hub, scores against datasets/bug_to_user_story.jsonl
 ```
